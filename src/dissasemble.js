@@ -8,7 +8,8 @@ function dissasemble( instruction){
 		0x0800: "LOD",
 		0x0A00: "STR",
 		0x0C00: "IN" ,
-		0x0E00: "OUT"
+		0x0E00: "OUT",
+		0x0F00: "PRI"
 	}
 	let regs = {
 		0: "R0",
@@ -19,11 +20,6 @@ function dissasemble( instruction){
 		5: "R5",
 		6: "SP",
 		7: "PC",
-	}
-	try{
-		opCode = instruction & 0xFE00
-	} catch {
-		return "INVALID instruction XECUTED"
 	}
 
 	op1 = (instruction & 0x01C0) >> 6
@@ -51,6 +47,11 @@ function dissasemble( instruction){
 			break
 		case "STR":
 			return `${opCode} ${op2} ${op3}`
+			break
+		case "PRI":
+			return `${opCode} ${op1}`
+			break
+		default:
 			break
 	}
 }
