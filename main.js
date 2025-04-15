@@ -59,27 +59,27 @@ function reset(){
 	}
 
 
-	int ADD = 0
-	int BGE = 1
-	int NOR = 2
-	int RSH = 3
-	int LOD = 4
-	int STR = 5
-	int IN = 6
-	int OUT = 7
+	ADD = 0
+	BGE = 1
+	NOR = 2
+	RSH = 3
+	LOD = 4
+	STR = 5
+	IN = 6
+	OUT = 7
 
 	registers = [0,0,0,0,0,0,0,0]
 
-	int R0 = 0
-	int R1 = 1
-	int R2 = 2
-	int R3 = 3
-	int R4 = 4
-	int R5 = 5
-	int SP = 6
-	int PC = 7
+	R0 = 0
+	R1 = 1
+	R2 = 2
+	R3 = 3
+	R4 = 4
+	R5 = 5
+	SP = 6
+	PC = 7
 	
-	int errorCount = 0
+	errorCount = 0
 	registers[SP] = (2**12)-1
 
 }
