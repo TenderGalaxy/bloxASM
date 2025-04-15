@@ -168,13 +168,17 @@ function dissasemble(int instruction){
 		case "BGE":
 		case "NOR":
 			return `${opCode} ${op1} ${op2} ${op3} `
+			break
 		case "OUT":
 			return `${opCode} %TEXT ${op2}`
+			break
 		case "RSH":
 		case "LOD":
 			return `${opCode} ${op1} ${op2}`
+			break
 		case "STR":
 			return `${opCode} ${op2} ${op3}`
+			break
 	}
 }
 
@@ -189,49 +193,57 @@ function interpret(int x){
 
 	dontIncrement = false
 
-	if(opCode == ADD){
-		source1 = registers[op2]
-		source2 = registers[op3]
-		answer = fix16bit(source1 + source2)
-		registers[op1] = answer
-		if(op1 == PC){
-			dontIncrement = true
-		}
-	} else if(opCode == BGE) {
-		source1 = registers[op2]
-		source2 = registers[op3]
-		destination = registers[op1]
-		answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
-		if(answer){
-			registers[PC] = destination
-			dontIncrement = true
-		}
-	} else if (opCode == NOR) {
-		source1 = registers[op2]
-		source2 = registers[op3]
-		answer = logicalNOR(source1, source2)
-		registers[op1] = answer
-		if (op1 == PC){
-			dontIncrement = true
-		}
-	} else if (opCode == RSH) {
-		source1 = registers[op2]
-		answer = source1 >> 1
-		registers[op1] = answer
-		if(op1 == PC){
-			dontIncrement = true
-		}
-	} else if (opCode == LOD){
-		address = registers[op2] & 0x03FF
-		ram[address] = registers[op3]
-	} else if (opCode == IN){
-		registers[op1] = fix16bit(key)
-		key = ""
-	} else if (opCode == OUT){
-		source1 = registers[op1]
-		source2 = registers[op2]
-		source3 = registers[op3]
-		setpx(source1,source2,source3)
+	switch (opCode){
+		case ADD:
+			source1 = registers[op2]
+			source2 = registers[op3]
+			answer = fix16bit(source1 + source2)
+			registers[op1] = answer
+			if(op1 == PC){
+				dontIncrement = true
+			}
+			break
+		case BGE:
+			source1 = registers[op2]
+			source2 = registers[op3]
+			destination = registers[op1]
+			answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
+			if(answer){
+				registers[PC] = destination
+				dontIncrement = true
+			}
+			break
+		case NOR:
+			source1 = registers[op2]
+			source2 = registers[op3]
+			answer = logicalNOR(source1, source2)
+			registers[op1] = answer
+			if (op1 == PC){
+				dontIncrement = true
+			}
+			break
+		case RSH:
+			source1 = registers[op2]
+			answer = source1 >> 1
+			registers[op1] = answer
+			if(op1 == PC){
+				dontIncrement = true
+			}
+			break
+		case LOD:
+			address = registers[op2] & 0x03FF
+			ram[address] = registers[op3]
+			break
+		case IN:
+			registers[op1] = fix16bit(key)
+			key = ""
+			break
+		case OUT:
+			source1 = registers[op1]
+			source2 = registers[op2]
+			source3 = registers[op3]
+			setpx(source1,source2,source3)
+			break
 	}
 }
 
