@@ -1,0 +1,7 @@
+ROM support hasn't been officially added yet, but you can still paste it in yourself
+
+
+INSTRUCTIONS:
+
+Each bloxASM operation is a list, where the initial item is the function.
+
