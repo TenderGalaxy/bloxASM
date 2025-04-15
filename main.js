@@ -182,7 +182,7 @@ function dissasemble( inuction){
 	}
 }
 
-function erpret( x){
+function interpret( x){
 
 	inuction = ram[registers[PC]]
 
@@ -256,6 +256,6 @@ function tick(){
 
 	if(tick%2 == 0){
 		regs[PC] = tick/2
-		erpret(program_counter)
+		interpret(program_counter)
 	}
 }
