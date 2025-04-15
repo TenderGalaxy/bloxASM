@@ -21,8 +21,13 @@
 	tick = () => {}			 or			 function tick() {}
 */
 function onPlayerSelectInventorySlot(p,i){
-	if(api.getPlayerId("fenl") == p){
-		key = i
+	j = api.getPlayerId("fenl")
+	if(j == p){
+		key = 10 * key + i
+		if (getBlockCoordinatesPlayerStandingOn(j) == []){
+			key = 0
+		}
+		api.broadcast(key)
 	}
 }
 
@@ -209,6 +214,24 @@ function interpret(int x){
 		if (op1 == PC){
 			dontIncrement = true
 		}
+	} else if (opCode == RSH) {
+		source1 = registers[op2]
+		answer = source1 >> 1
+		registers[op1] = answer
+		if(op1 == PC){
+			dontIncrement = true
+		}
+	} else if (opCode == LOD){
+		address = registers[op2] & 0x03FF
+		ram[address] = registers[op3]
+	} else if (opCode == IN){
+		registers[op1] = fix16bit(key)
+		key = ""
+	} else if (opCode == OUT){
+		source1 = registers[op1]
+		source2 = registers[op2]
+		source3 = registers[op3]
+		setpx(source1,source2,source3)
 	}
 }
 
