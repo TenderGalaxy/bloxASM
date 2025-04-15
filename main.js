@@ -21,31 +21,31 @@
 	tick = () => {}			 or			 function tick() {}
 */
 function onPlayerSelectInventorySlot(i){
-key = i
+	key = i
 }
 
 
 function reset(){
-api.setBlockRect([100, 0, -20],[100, 30, -10],"White Concrete")
-api.setBlockRect([100, 0, -10],[100, 30, 0],"White Concrete")
-api.setBlockRect([100, 0, 0],[100, 30, 10],"White Concrete")
-api.setBlockRect([100, 0, 10],[100, 30, 20],"White Concrete")
-key = 0
-tick = 0
-rom = [
+	api.setBlockRect([100, 0, -20],[100, 30, -10],"White Concrete")
+	api.setBlockRect([100, 0, -10],[100, 30, 0],"White Concrete")
+	api.setBlockRect([100, 0, 0],[100, 30, 10],"White Concrete")
+	api.setBlockRect([100, 0, 10],[100, 30, 20],"White Concrete")
+	key = 0
+	tick = 0
+	rom = [
 "0001",
 "
 ]
 }
 
 function tick(){
-try{on}catch{
-reset()
-on = "YES"
-}
-tick++
+	try{on}catch{
+		reset()
+		on = "YES"
+	}
+	tick++
 
-/* INTERPRETER */
+	/* INTERPRETER */
 
 
 
