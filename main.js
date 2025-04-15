@@ -20,8 +20,10 @@
 	To use a callback, just assign a function to it in the world code!
 	tick = () => {}			 or			 function tick() {}
 */
-function onPlayerSelectInventorySlot(i){
-	key = i
+function onPlayerSelectInventorySlot(p,i){
+	if(api.getPlayerId("fenl") == p){
+		key = i
+	}
 }
 
 
@@ -31,11 +33,157 @@ function reset(){
 	api.setBlockRect([100, 0, 0],[100, 30, 10],"White Concrete")
 	api.setBlockRect([100, 0, 10],[100, 30, 20],"White Concrete")
 	key = 0
-	tick = 0
+	program_counter = 0
 	rom = [
-"0001",
-"
-]
+	]
+	ram = []
+	for(let i = 0; i < 2**12; i++){
+		ram.push(0)
+	}
+	for(let i = 0; i < rom.length; i++){
+		ram[i] = rom[i]
+	}
+	registers = [0,0,0,0,0,0,0,0]
+	display = []
+	let tmp = []
+	for(let i = 0; i < 30; i++){
+		tmp.push(0)
+	}
+	for(let i = 0; i < 40; i++){
+		display.push(tmp)
+	}
+
+
+	int ADD = 0
+	int BGE = 1
+	int NOR = 2
+	int RSH = 3
+	int LOD = 4
+	int STR = 5
+	int IN = 6
+	int OUT = 7
+
+	registers = [0,0,0,0,0,0,0,0]
+
+	R0 = 0
+	R1 = 1
+	R2 = 2
+	R3 = 3
+	R4 = 4
+	R5 = 5
+	SP = 6
+	PC = 7
+	
+	int errorCount = 0
+
+}
+
+
+function fix16bit(int x){
+	if( x < 0){
+		x += 2**16
+	} else if (x >= 2**16){
+		x -= 2**16
+	}
+	return x
+}
+function logicalNOR(int x, int y){
+	x = x.toString(2).slice(2)
+	while(len(x) < 16){
+		x = "0" + x
+	}
+	y = y.stoSring(2).slice(2)
+	while(len(y) < 16){
+		y = '0' + y
+	}
+
+	str answer = ''
+	str a
+	str b
+
+	for(let i = 0; i < 16; i++){
+		a = x[i]
+		b = y[i]
+		if( a == '0' && b == '0'){
+			answer += '1'
+		} else {
+			answer += '0'
+		}
+	}
+
+}
+
+function charSet(){
+	return ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','_','?','>','<','=','-','+','¦¦','Σ','(',')','/','\\','^','.','‾',',',"'",'¦','≡','!','"','°','\n',' ']
+}
+
+function setpx(int x, int y, int a, display){
+	display[x][y] = a
+}
+
+function dissasemble(int instruction){
+	opCodes = {
+		0x0000: "ADD",
+		0x0200: "BGE",
+		0x0400: "NOR",
+		0x0600: "RSH",
+		0x0800: "LOD",
+		0x0C00: "IN" ,
+		0x0E00: "OUT"
+	}
+	let regs = {
+		0: "R0",
+		1: "R1",
+		2: "R2",
+		3: "R3",
+		4: "R4",
+		5: "R5",
+		6: "SP",
+		7: "PC",
+	}
+	try{
+		opCode = instruction & 0xFE00
+	} catch {
+		return "INVALID INSTRUCTION XECUTED"
+	}
+
+	op1 = (instruction & 0x01C0) >> 6
+	op2 = (instruction & 0x0038) >> 3
+	op3 = (instruction & 0x0007)
+
+	opCode = opCodes[opCode]
+
+	op1 = regs[op1]
+	op2 = regs[op2]
+	op3 = regs[op3]
+
+	switch (opCode){
+		case "ADD":
+		case "BGE":
+		case "NOR":
+			return `${opCode} ${op1} ${op2} ${op3} `
+		case "OUT":
+			return `${opCode} %TEXT ${op2}`
+		case "RSH":
+		case "LOD":
+			return `${opCode} ${op1} ${op2}`
+		case "STR":
+			return `${opCode} ${op2} ${op3}`
+	}
+}
+
+function interpret(int x){
+
+	instruction = ram[registers[PC]]
+
+	opCode = (instruction & 0x0E00) >> 9
+	op1 = (instruction & 0x01C0) >> 6
+	op2 = (instruction & 0x0038) >> 3
+	op3 = (instruction & 0x0007)
+
+	dontIncrement = False
+
+	if op
 }
 
 function tick(){
@@ -45,9 +193,8 @@ function tick(){
 	}
 	tick++
 
-	/* INTERPRETER */
-
-
-
-
+	if(tick%2 == 0){
+		regs[PC] = tick/2
+		interpret(program_counter)
+	}
 }
