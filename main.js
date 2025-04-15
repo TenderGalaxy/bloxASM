@@ -65,16 +65,17 @@ function reset(){
 
 	registers = [0,0,0,0,0,0,0,0]
 
-	R0 = 0
-	R1 = 1
-	R2 = 2
-	R3 = 3
-	R4 = 4
-	R5 = 5
-	SP = 6
-	PC = 7
+	int R0 = 0
+	int R1 = 1
+	int R2 = 2
+	int R3 = 3
+	int R4 = 4
+	int R5 = 5
+	int SP = 6
+	int PC = 7
 	
 	int errorCount = 0
+	registers[SP] = (2**12)-1
 
 }
 
@@ -181,9 +182,34 @@ function interpret(int x){
 	op2 = (instruction & 0x0038) >> 3
 	op3 = (instruction & 0x0007)
 
-	dontIncrement = False
+	dontIncrement = false
 
-	if op
+	if(opCode == ADD){
+		source1 = registers[op2]
+		source2 = registers[op3]
+		answer = fix16bit(source1 + source2)
+		registers[op1] = answer
+		if(op1 == PC){
+			dontIncrement = true
+		}
+	} else if(opCode == BGE) {
+		source1 = registers[op2]
+		source2 = registers[op3]
+		destination = registers[op1]
+		answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
+		if(answer){
+			registers[PC] = destination
+			dontIncrement = true
+		}
+	} else if (opCode == NOR) {
+		source1 = registers[op2]
+		source2 = registers[op3]
+		answer = logicalNOR(source1, source2)
+		registers[op1] = answer
+		if (op1 == PC){
+			dontIncrement = true
+		}
+	}
 }
 
 function tick(){
