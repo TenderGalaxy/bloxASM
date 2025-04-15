@@ -4,7 +4,7 @@
 	onPlayerPickedUpItem onPlayerSelectInventorySlot onBlockStand
 	onPlayerAttemptCraft onPlayerCraft onPlayerAttemptOpenChest
 	onPlayerOpenedChest onPlayerMoveItemOutOfInventory onPlayerMoveInvenItem
-	onPlayerMoveItemIntoIdxs onPlayerSwapInvenSlots onPlayerMoveInvenItemWithAmt
+	onPlayerMoveItemoIdxs onPlayerSwapInvenSlots onPlayerMoveInvenItemWithAmt
 	onPlayerAttemptAltAction onPlayerAltAction onPlayerClick
 	onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeBlock
 	onCreateBloxdMeshEntity onEntityCollision onPlayerAttemptSpawnMob
@@ -64,7 +64,7 @@ function reset(){
 	NOR = 2
 	RSH = 3
 	LOD = 4
-	STR = 5
+	 = 5
 	IN = 6
 	OUT = 7
 
@@ -85,7 +85,7 @@ function reset(){
 }
 
 
-function fix16bit(int x){
+function fix16bit( x){
 	if( x < 0){
 		x += 2**16
 	} else if (x >= 2**16){
@@ -93,8 +93,8 @@ function fix16bit(int x){
 	}
 	return x
 }
-function logicalNOR(int x, int y){
-	x = x.toString(2).slice(2)
+function logicalNOR( x,  y){
+	x = x.toing(2).slice(2)
 	while(len(x) < 16){
 		x = "0" + x
 	}
@@ -103,9 +103,9 @@ function logicalNOR(int x, int y){
 		y = '0' + y
 	}
 
-	str answer = ''
-	str a
-	str b
+	 answer = ''
+	 a
+	 b
 
 	for(let i = 0; i < 16; i++){
 		a = x[i]
@@ -123,11 +123,11 @@ function charSet(){
 	return ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','_','?','>','<','=','-','+','¦¦','Σ','(',')','/','\\','^','.','‾',',',"'",'¦','≡','!','"','°','\n',' ']
 }
 
-function setpx(int x, int y, int a, display){
+function setpx( x,  y,  a, display){
 	display[x][y] = a
 }
 
-function dissasemble(int instruction){
+function dissasemble( inuction){
 	opCodes = {
 		0x0000: "ADD",
 		0x0200: "BGE",
@@ -148,14 +148,14 @@ function dissasemble(int instruction){
 		7: "PC",
 	}
 	try{
-		opCode = instruction & 0xFE00
+		opCode = inuction & 0xFE00
 	} catch {
-		return "INVALID INSTRUCTION XECUTED"
+		return "INVALID INUCTION XECUTED"
 	}
 
-	op1 = (instruction & 0x01C0) >> 6
-	op2 = (instruction & 0x0038) >> 3
-	op3 = (instruction & 0x0007)
+	op1 = (inuction & 0x01C0) >> 6
+	op2 = (inuction & 0x0038) >> 3
+	op3 = (inuction & 0x0007)
 
 	opCode = opCodes[opCode]
 
@@ -176,20 +176,20 @@ function dissasemble(int instruction){
 		case "LOD":
 			return `${opCode} ${op1} ${op2}`
 			break
-		case "STR":
+		case "":
 			return `${opCode} ${op2} ${op3}`
 			break
 	}
 }
 
-function interpret(int x){
+function erpret( x){
 
-	instruction = ram[registers[PC]]
+	inuction = ram[registers[PC]]
 
-	opCode = (instruction & 0x0E00) >> 9
-	op1 = (instruction & 0x01C0) >> 6
-	op2 = (instruction & 0x0038) >> 3
-	op3 = (instruction & 0x0007)
+	opCode = (inuction & 0x0E00) >> 9
+	op1 = (inuction & 0x01C0) >> 6
+	op2 = (inuction & 0x0038) >> 3
+	op3 = (inuction & 0x0007)
 
 	dontIncrement = false
 
@@ -256,6 +256,6 @@ function tick(){
 
 	if(tick%2 == 0){
 		regs[PC] = tick/2
-		interpret(program_counter)
+		erpret(program_counter)
 	}
 }
