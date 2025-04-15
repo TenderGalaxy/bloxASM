@@ -68,6 +68,7 @@ function reset(){
 	STR = 5
 	IN = 6
 	OUT = 7
+	PRI = 8
 
 	registers = [0,0,0,0,0,0,0,0]
 
@@ -134,7 +135,7 @@ function interpret( x){
 
 	instruction = ram[registers[PC]]
 
-	opCode = (instruction & 0x0E00) >> 9
+	opCode = (instruction & 0x1E00) >> 9
 	op1 = (instruction & 0x01C0) >> 6
 	op2 = (instruction & 0x0038) >> 3
 	op3 = (instruction & 0x0007)
@@ -192,6 +193,9 @@ function interpret( x){
 			source3 = registers[op3]
 			setpx(source1,source2,source3)
 			break
+		case PRI:
+			source1 = registers[op1]
+			api.broadcastMessage(charSet()[source1])
 	}
 }
 
