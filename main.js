@@ -20,6 +20,7 @@
 	To use a callback, just assign a function to it in the world code!
 	tick = () => {}			 or			 function tick() {}
 */
+'esversion: 10'
 function onPlayerSelectInventorySlot(p,i){
 	j = api.getPlayerId("fenl")
 	if(j == p){
@@ -64,7 +65,7 @@ function reset(){
 	NOR = 2
 	RSH = 3
 	LOD = 4
-	 = 5
+	STR = 5
 	IN = 6
 	OUT = 7
 
@@ -127,69 +128,16 @@ function setpx( x,  y,  a, display){
 	display[x][y] = a
 }
 
-function dissasemble( inuction){
-	opCodes = {
-		0x0000: "ADD",
-		0x0200: "BGE",
-		0x0400: "NOR",
-		0x0600: "RSH",
-		0x0800: "LOD",
-		0x0C00: "IN" ,
-		0x0E00: "OUT"
-	}
-	let regs = {
-		0: "R0",
-		1: "R1",
-		2: "R2",
-		3: "R3",
-		4: "R4",
-		5: "R5",
-		6: "SP",
-		7: "PC",
-	}
-	try{
-		opCode = inuction & 0xFE00
-	} catch {
-		return "INVALID INUCTION XECUTED"
-	}
 
-	op1 = (inuction & 0x01C0) >> 6
-	op2 = (inuction & 0x0038) >> 3
-	op3 = (inuction & 0x0007)
-
-	opCode = opCodes[opCode]
-
-	op1 = regs[op1]
-	op2 = regs[op2]
-	op3 = regs[op3]
-
-	switch (opCode){
-		case "ADD":
-		case "BGE":
-		case "NOR":
-			return `${opCode} ${op1} ${op2} ${op3} `
-			break
-		case "OUT":
-			return `${opCode} %TEXT ${op2}`
-			break
-		case "RSH":
-		case "LOD":
-			return `${opCode} ${op1} ${op2}`
-			break
-		case "":
-			return `${opCode} ${op2} ${op3}`
-			break
-	}
-}
 
 function interpret( x){
 
-	inuction = ram[registers[PC]]
+	instruction = ram[registers[PC]]
 
-	opCode = (inuction & 0x0E00) >> 9
-	op1 = (inuction & 0x01C0) >> 6
-	op2 = (inuction & 0x0038) >> 3
-	op3 = (inuction & 0x0007)
+	opCode = (instruction & 0x0E00) >> 9
+	op1 = (instruction & 0x01C0) >> 6
+	op2 = (instruction & 0x0038) >> 3
+	op3 = (instruction & 0x0007)
 
 	dontIncrement = false
 
