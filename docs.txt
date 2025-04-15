@@ -1,18 +1,1 @@
-ROM support hasn't been officially added yet, but you can still paste it in yourself
-There are 16 registers and 1 kilobyte of memory. Roms are unlimited and can come with a memory cart as well.
-
-INSTRUCTIONS:
-
-Each bloxASM operation is a list, where the initial item is the function.
-Arguments: [x,y,a,b,c,d]
-UPL - Set register x to mem y
-STO - Set mem x to register y
-PSM - Set mem x to y
-PSR - Set reg x to y
-ADD - Add register x with register y
-SUB - Subtract register y from register x
-RGB - Set [x,y] to a on the screen (40x30, top-down left-right)
-JMP - Jump to line x
-JMI - Jump to line x if y > a
-JMR - Skip x lines (x can be negative)
-JRI - Skip x lines if y > a
+Runs on Core URCL
