@@ -1,2 +1,0 @@
-Runs on Core URCL
-(Marshmellow Interpreter ported to JS)
