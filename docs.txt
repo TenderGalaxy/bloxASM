@@ -1,7 +1,15 @@
 ROM support hasn't been officially added yet, but you can still paste it in yourself
-
+There are 16 registers and 1 kilobyte of memory. The ROM is unlimited.
 
 INSTRUCTIONS:
 
 Each bloxASM operation is a list, where the initial item is the function.
-
+"0" Locate pointer to [argument 1].
+"1" Set register [argument 1] with current pointer.
+"2" Perform arithmetic [argument 1] (*,/,%,+,-,s (sine), c (cosine), t (tan), l (log)) with [argument 2] and [argument 3]
+"3" Set pixel [argument 1] to [argument 2], a block index.
+"4" Draw line between point [argument 2],[argument 3] and [argument 4, argument 5] with pixel [argument 1]
+"5" Set memory [argument 1] to [argument 2]
+"6" goto [argument 1]
+"7" goto [argument 1] if [argument 2] > 0
+"8" Quit
