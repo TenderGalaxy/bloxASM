@@ -36,6 +36,7 @@ function setReg(x,y){
 }
 
 function reset(){
+	key = 0
 	api.setblockRect([100, 0, -20],[100, 30, -10],"White Concrete")
 	api.setblockRect([100, 0, -10],[100, 30, 0],"White Concrete")
 	api.setblockRect([100, 0, 0],[100, 30, 10],"White Concrete")
@@ -271,7 +272,7 @@ function interpret( x){
 			break
 		case IN:
 			ram[op1] = fix16bit(key)
-			key = ""
+			key = 0
 			break
 		case OUT:
 			source1 = ram[op1]
