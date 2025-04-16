@@ -217,16 +217,15 @@ function interpret( x){
 
 	instruction = ram[ram[PC] + 8]
 
-	opCode = instruction.slice(2,6)
-	op1 = instruction.slice(6,10)
-	op2 = instruction.slice(10,14)
-	op3 = instruction.slice(14,18)
+	opCode = instruction.slice(2,6).toString(10)
+	op1 = parseInt(instruction.slice(6,10).toString(10))
+	op2 = parseInt(instruction.slice(10,14).toString(10))
+	op3 = parseInt(instruction.slice(14,18).toString(10))
 
 
 	increment = true
-
 	switch (opCode){
-		case ADD:
+		case "0000": // ADD
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = fix16bit(source1 + source2)
@@ -235,7 +234,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case BGE:
+		case "0001": // BGE
 			source1 = ram[op2]
 			source2 = ram[op3]
 			destination = ram[op1]
@@ -249,7 +248,7 @@ function interpret( x){
 				ram[PC] = destination
 			}
 			break
-		case NOR:
+		case "0002": // NOR
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = logicalNOR(source1, source2)
@@ -258,7 +257,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case RSH:
+		case "0003": //RSH
 			source1 = ram[op2]
 			answer = fix16bit(source1 >> 1)
 			ram[op1] = answer
@@ -266,27 +265,27 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case MOV:
-			ram[address] = ram[op1]
+		case "0004": //MOV
+			ram[op1] = ram[op2]
 			break
-		case IN:
+		case "0005": //IN
 			ram[op1] = fix16bit(key)
 			key = 0
 			break
-		case OUT:
+		case "0006": //OUT
 			source1 = ram[op1]
 			source2 = ram[op2]
 			source3 = ram[op3]
 			setpx(source1,source2,source3)
 			break
-		case PRI:
+		case "0007": //PRI
 			source1 = ram[op1]
-			api.broadcastMessage(charSet()[source1])
+			console.log(charSet()[source1])
 			break
-		case IMM:
+		case "0008": //IMM
 			ram[op1] = op2
 			break
-		case JMP:
+		case "0009": //JMP
 			destination = ram[op1]
 			increment = false
 			if(destination[0] == "."){
@@ -295,10 +294,10 @@ function interpret( x){
 			}
 			ram[PC] = destination
 			break
-		case END:
+		case "0010": //END
 			halt = "YES"
 			break
-		case SUB:
+		case "0011": //SUB
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = fix16bit(source1 - source2)
@@ -307,9 +306,9 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case NOP:
+		case "0012": //NOP
 			break
-		case LSH:
+		case "0013": // LSH
 			source1 = ram[op2]
 			answer = fix16bit(source1 << 1)
 			ram[op1] = answer
@@ -317,7 +316,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case INC:
+		case "0014": //INC
 			source1 = ram[op2]
 			answer = fix16bit(source1 + 1)
 			ram[op1] = answer
@@ -325,7 +324,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case DEC:
+		case "0015" :// DEC
 			source1 = ram[op2]
 			answer = fix16bit(source1 - 1)
 			ram[op1] = answer
@@ -333,7 +332,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case PRI:
+		case "0016" :// PRR
 			source1 = ram[op1]
 			api.broadcastMessage(source1)
 			break
