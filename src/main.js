@@ -31,7 +31,9 @@ function onPlayerSelectInventorySlot(p,i){
 		api.broadcast(key)
 	}
 }
-
+function setReg(x,y){
+	ram[x] = y
+}
 
 function reset(){
 	api.setBlockRect([100, 0, -20],[100, 30, -10],"White Concrete")
@@ -46,12 +48,12 @@ function reset(){
 	}
 	keys = {}
 	for(let i = 0; i < rom.length; i++){
-		ram[i] = rom[i]
+		ram[i + 8] = rom[i]
 		if (rom[i][0] == "."){
 			keys[rom[i] = i
 		}
 	}
-	registers = [0,0,0,0,0,0,0,0]
+	ram = [0,0,0,0,0,0,0,0]
 	display = []
 	let tmp = []
 	for(let i = 0; i < 30; i++){
@@ -73,8 +75,7 @@ function reset(){
 	PRI = 8
 	IMM = 9
 	JMP = 10
-
-	registers = [0,0,0,0,0,0,0,0]
+	END = 11
 
 	R0 = 0
 	R1 = 1
@@ -86,7 +87,7 @@ function reset(){
 	PC = 7
 	
 	errorCount = 0
-	registers[SP] = (2**12)-1
+	ram[SP] = (2**12)-1
 
 }
 
@@ -137,89 +138,92 @@ function setpx( x,  y,  a, display){
 
 function interpret( x){
 
-	if(x[0] == "." || (x[0] == "/" && x[1] == "/")){
+	if(x[0] == "/" && x[1] == "/"){
 		return -1
 	}
 
-	instruction = ram[registers[PC]]
+	instruction = ram[ram[PC]]
 
 	opCode = (instruction & 0xFFFF000000000000) >> 48
 	op1 = (instruction & 0xFFFF00000000) >> 32
 	op2 = (instruction & 0xFFFF0000) >> 16
 	op3 = (instruction & 0xFFFF)
 
-	dontIncrement = false
+	increment = true
 
 	switch (opCode){
 		case ADD:
-			source1 = registers[op2]
-			source2 = registers[op3]
+			source1 = ram[op2]
+			source2 = ram[op3]
 			answer = fix16bit(source1 + source2)
-			registers[op1] = answer
+			ram[op1] = answer
 			if(op1 == PC){
-				dontIncrement = true
+				increment = false
 			}
 			break
 		case BGE:
-			source1 = registers[op2]
-			source2 = registers[op3]
-			destination = registers[op1]
-			dontIncrement = true
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
 			if(destination[0] == "."){
 				destination = keys[destination]
-				dontIncrement = false
+				increment = true
 			}
 			answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
 			if(answer){
-				registers[PC] = destination
+				ram[PC] = destination
 			}
 			break
 		case NOR:
-			source1 = registers[op2]
-			source2 = registers[op3]
+			source1 = ram[op2]
+			source2 = ram[op3]
 			answer = logicalNOR(source1, source2)
-			registers[op1] = answer
+			ram[op1] = answer
 			if (op1 == PC){
-				dontIncrement = true
+				increment = false
 			}
 			break
 		case RSH:
-			source1 = registers[op2]
+			source1 = ram[op2]
 			answer = source1 >> 1
-			registers[op1] = answer
+			ram[op1] = answer
 			if(op1 == PC){
-				dontIncrement = true
+				increment = false
 			}
 			break
 		case LOD:
-			address = registers[op2] & 0x03FF
-			ram[address] = registers[op3]
+			address = ram[op2] & 0x03FF
+			ram[address] = ram[op3]
 			break
 		case IN:
-			registers[op1] = fix16bit(key)
+			ram[op1] = fix16bit(key)
 			key = ""
 			break
 		case OUT:
-			source1 = registers[op1]
-			source2 = registers[op2]
-			source3 = registers[op3]
+			source1 = ram[op1]
+			source2 = ram[op2]
+			source3 = ram[op3]
 			setpx(source1,source2,source3)
 			break
 		case PRI:
-			source1 = registers[op1]
+			source1 = ram[op1]
 			api.broadcastMessage(charSet()[source1])
 			break
 		case IMM:
-			registers[op1] = op2
+			ram[op1] = op2
 			break
 		case JMP:
-			destination = registers[op1]
-			dontIncrement = true
+			destination = ram[op1]
+			increment = false
 			if(destination[0] == "."){
 				destination = keys[destination]
-				dontIncrement = false
+				increment = true
 			}
-			registers[PC] = destination
+			ram[PC] = destination
+			break
+		case END:
+			halt = "YES"
 			break
 	}
 }
@@ -231,11 +235,9 @@ function tick(){
 	}
 	tick++
 
-	if(tick%2 == 0){
-		if(dontIncrement){
-			
-		} else {
-			regs[PC]++
+	if(tick%2 == 0 && halt == "NO"){
+		if(increment){
+			ram[PC]++
 		}
 		interpret(program_counter)
 	}
