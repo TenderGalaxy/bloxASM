@@ -10,6 +10,7 @@ function dissasemble( instruction){
 		0x0C00: "IN" ,
 		0x0E00: "OUT",
 		0x0F00: "PRI"
+		0x1200: "IMM"
 	}
 	let regs = {
 		0: "R0",
