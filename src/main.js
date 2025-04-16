@@ -348,7 +348,7 @@ function tick(){
 	}
 	tick++
 
-	if(tick%2 == 0 && halt == "NO"){
+	if(tick%2 == 0 && on == "NO"){
 		if(increment){
 			ram[PC]++
 		}
