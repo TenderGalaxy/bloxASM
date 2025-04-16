@@ -68,14 +68,13 @@ function reset(){
 	BGE = 1
 	NOR = 2
 	RSH = 3
-	LOD = 4
-	STR = 5
-	IN = 6
-	OUT = 7
-	PRI = 8
-	IMM = 9
-	JMP = 10
-	END = 11
+	MOV = 4
+	IN = 5
+	OUT = 6
+	PRI = 7
+	IMM = 8
+	JMP = 9
+	END = 10
 
 	R0 = 0
 	R1 = 1
@@ -101,11 +100,11 @@ function fix16bit( x){
 	return x
 }
 function logicalNOR( x,  y){
-	x = x.toing(2).slice(2)
+	x = x.toString(2).slice(2)
 	while(len(x) < 16){
 		x = "0" + x
 	}
-	y = y.stoSring(2).slice(2)
+	y = y.toString(2).slice(2)
 	while(len(y) < 16){
 		y = '0' + y
 	}
@@ -192,9 +191,8 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case LOD:
-			address = ram[op2] & 0x03FF
-			ram[address] = ram[op3]
+		case MOV:
+			ram[address] = ram[op1]
 			break
 		case IN:
 			ram[op1] = fix16bit(key)
