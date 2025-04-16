@@ -1,31 +1,31 @@
 /*
-	tick onClose onPlayerJoin onPlayerLeave onPlayerJump onRespawnRequest
-	playerCommand onPlayerChat onPlayerChangeBlock onPlayerDropItem
-	onPlayerPickedUpItem onPlayerSelectInventorySlot onBlockStand
-	onPlayerAttemptCraft onPlayerCraft onPlayerAttemptOpenChest
-	onPlayerOpenedChest onPlayerMoveItemOutOfInventory onPlayerMoveInvenItem
-	onPlayerMoveItemoIdxs onPlayerSwapInvenSlots onPlayerMoveInvenItemWithAmt
-	onPlayerAttemptAltAction onPlayerAltAction onPlayerClick
-	onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeBlock
-	onCreateBloxdMeshEntity onEntityCollision onPlayerAttemptSpawnMob
-	onWorldAttemptSpawnMob onPlayerSpawnMob onWorldSpawnMob onMobDespawned
-	onPlayerAttack onPlayerDamagingOtherPlayer onPlayerDamagingMob
-	onMobDamagingPlayer onMobDamagingOtherMob onPlayerKilledOtherPlayer
-	onMobKilledPlayer onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
-	onPlayerDamagingMeshEntity onPlayerBreakMeshEntity onPlayerUsedThrowable
-	onPlayerThrowableHitTerrain onTouchscreenActionButton onTaskClaimed
-	onChunkLoaded onPlayerRequestChunk onItemDropCreated
-	onPlayerStartChargingItem onPlayerFinishChargingItem doPeriodicSave
+	tick onClose onplayerJoin onplayerLeave onplayerJump onRespawnRequest
+	playerCommand onplayerChat onplayerChangeblock onplayerDropItem
+	onplayerpickedUpItem onplayerSelectInventorySlot onblockStand
+	onplayerAttemptCraft onplayerCraft onplayerAttemptOpenChest
+	onplayerOpenedChest onplayerMoveItemOutOfInventory onplayerMoveInvenItem
+	onplayerMoveItemoIdxs onplayerSwapInvenSlots onplayerMoveInvenItemWithAmt
+	onplayerAttemptAltAction onplayerAltAction onplayerClick
+	onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeblock
+	onCreatebloxdMeshEntity onEntityCollision onplayerAttemptSpawnMob
+	onWorldAttemptSpawnMob onplayerSpawnMob onWorldSpawnMob onMobDespawned
+	onplayerAttack onplayerDamagingOtherplayer onplayerDamagingMob
+	onMobDamagingplayer onMobDamagingOtherMob onplayerKilledOtherplayer
+	onMobKilledplayer onplayerKilledMob onMobKilledOtherMob onplayerpotionEffect
+	onplayerDamagingMeshEntity onplayerbreakMeshEntity onplayerUsedThrowable
+	onplayerThrowableHitTerrain onTouchscreenActionbutton onTaskClaimed
+	onChunkLoaded onplayerRequestChunk onItemDropCreated
+	onplayerStartChargingItem onplayerFinishChargingItem doperiodicSave
 
 	To use a callback, just assign a function to it in the world code!
 	tick = () => {}			 or			 function tick() {}
 */
 'esversion: 10'
-function onPlayerSelectInventorySlot(p,i){
-	j = api.getPlayerId("fenl")
+function onplayerSelectInventorySlot(p,i){
+	j = api.getplayerId("fenl")
 	if(j == p){
 		key = 10 * key + i
-		if (getBlockCoordinatesPlayerStandingOn(j) == []){
+		if (getblockCoordinatesplayerStandingOn(j) == []){
 			key = 0
 		}
 		api.broadcast(key)
@@ -36,11 +36,19 @@ function setReg(x,y){
 }
 
 function reset(){
-	api.setBlockRect([100, 0, -20],[100, 30, -10],"White Concrete")
-	api.setBlockRect([100, 0, -10],[100, 30, 0],"White Concrete")
-	api.setBlockRect([100, 0, 0],[100, 30, 10],"White Concrete")
-	api.setBlockRect([100, 0, 10],[100, 30, 20],"White Concrete")
+	api.setblockRect([100, 0, -20],[100, 30, -10],"White Concrete")
+	api.setblockRect([100, 0, -10],[100, 30, 0],"White Concrete")
+	api.setblockRect([100, 0, 0],[100, 30, 10],"White Concrete")
+	api.setblockRect([100, 0, 10],[100, 30, 20],"White Concrete")
 	rom = [
+"// Sets register 1 to ASCII H",
+"000800010011",
+"// prints register 1",
+"00070001",
+"// Sets register 1 to ASCII I",
+"000800010012",
+"// prints register 1",
+"00070001"
 	]
 	ram = []
 	for(let i = 0; i < 2**12; i++){
@@ -50,9 +58,10 @@ function reset(){
 	for(let i = 0; i < rom.length; i++){
 		ram[i + 8] = rom[i]
 		if (rom[i][0] == "."){
-			keys[rom[i] = i
+			keys[rom[i]] = i
 		}
 	}
+	ram = [0,0,0,0,0,0,0,0]
 	display = []
 	let tmp = []
 	for(let i = 0; i < 30; i++){
@@ -74,7 +83,7 @@ function reset(){
 	IMM = 8
 	JMP = 9
 	END = 10
-	SUB = 11
+	SUb = 11
 	NOP = 12
 	LSH = 13
 	INC = 14
@@ -142,7 +151,7 @@ function charSet(){
 		'8',
 		'9',
 		'A',
-		'B',
+		'b',
 		'C',
 		'D',
 		'E',
@@ -156,7 +165,7 @@ function charSet(){
 		'M',
 		'N',
 		'O',
-		'P',
+		'p',
 		'Q',
 		'R',
 		'S',
@@ -174,7 +183,7 @@ function charSet(){
 		'=',
 		'-',
 		'+',
-		'¦¦'
+		''
 		,'Σ',
 		'(',
 		')',
@@ -182,14 +191,14 @@ function charSet(){
 		'\\',
 		'^',
 		'.',
-		'‾',
+		'',
 		',',
 		"'",
-		'¦',
-		'≡',
+		'',
+		'',
 		'!',
 		'"',
-		'°',
+		'',
 		'\n',
 		' '
 	       ]
@@ -342,6 +351,6 @@ function tick(){
 		if(increment){
 			ram[PC]++
 		}
-		interpret(program_counter)
+		interpret(ram[PC])
 	}
 }
