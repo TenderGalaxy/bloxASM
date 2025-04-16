@@ -62,7 +62,6 @@ function reset(){
 			keys[rom[i]] = i
 		}
 	}
-	ram = [0,0,0,0,0,0,0,0]
 	display = []
 	let tmp = []
 	for(let i = 0; i < 30; i++){
