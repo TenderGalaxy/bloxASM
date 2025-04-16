@@ -345,10 +345,11 @@ function tick(){
 	try{on}catch{
 		reset()
 		on = "YES"
+		increment = true
 	}
 	tick++
 
-	if(tick%2 == 0 && on == "NO"){
+	if(tick%2 == 0 && on == "YES"){
 		if(increment){
 			ram[PC]++
 		}
