@@ -143,10 +143,10 @@ function interpret( x){
 
 	instruction = ram[registers[PC]]
 
-	opCode = (instruction & 0x1E00) >> 9
-	op1 = (instruction & 0x01C0) >> 6
-	op2 = (instruction & 0x0038) >> 3
-	op3 = (instruction & 0x0007)
+	opCode = (instruction & 0xFFFF000000000000) >> 48
+	op1 = (instruction & 0xFFFF00000000) >> 32
+	op2 = (instruction & 0xFFFF0000) >> 16
+	op3 = (instruction & 0xFFFF)
 
 	dontIncrement = false
 
