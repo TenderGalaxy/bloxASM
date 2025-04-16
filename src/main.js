@@ -43,13 +43,13 @@ function reset(){
 	api.setblockRect([100, 0, 10],[100, 30, 20],"White Concrete")
 	rom = [
 "// Sets register 1 to ASCII H",
-"0x000800010011",
+0x000800010011,
 "// prints register 1",
-"0x000700010000",
+0x000700010000,
 "// Sets register 1 to ASCII I",
-"0x000800010012",
+0x000800010012,
 "// prints register 1",
-"0x000700010000"
+0x000700010000
 	]
 	ram = []
 	for(let i = 0; i < 2**12; i++){
