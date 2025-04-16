@@ -76,6 +76,10 @@ function reset(){
 	JMP = 9
 	END = 10
 	SUB = 11
+	NOP = 12
+	LSH = 13
+	INC = 14
+	DEC = 15
 
 	R0 = 0
 	R1 = 1
@@ -228,6 +232,32 @@ function interpret( x){
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = fix16bit(source1 - source2)
+			ram[op1] = answer
+			if(op1 == PC){
+				increment = false
+			}
+			break
+		case NOP:
+			break
+		case LSH:
+			source1 = ram[op2]
+			answer = source1 << 1
+			ram[op1] = answer
+			if(op1 == PC){
+				increment = false
+			}
+			break
+		case INC:
+			source1 = ram[op2]
+			answer = fix16bit(source1 + 1)
+			ram[op1] = answer
+			if(op1 == PC){
+				increment = false
+			}
+			break
+		case DEC:
+			source1 = ram[op2]
+			answer = fix16bit(source1 - 1)
 			ram[op1] = answer
 			if(op1 == PC){
 				increment = false
