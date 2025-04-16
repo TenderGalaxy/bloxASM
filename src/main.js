@@ -38,16 +38,18 @@ function reset(){
 	api.setBlockRect([100, 0, -10],[100, 30, 0],"White Concrete")
 	api.setBlockRect([100, 0, 0],[100, 30, 10],"White Concrete")
 	api.setBlockRect([100, 0, 10],[100, 30, 20],"White Concrete")
-	key = 0
-	program_counter = 0
 	rom = [
 	]
 	ram = []
 	for(let i = 0; i < 2**12; i++){
 		ram.push(0)
 	}
+	keys = {}
 	for(let i = 0; i < rom.length; i++){
 		ram[i] = rom[i]
+		if (rom[i][0] == "."){
+			keys[rom[i] = i
+		}
 	}
 	registers = [0,0,0,0,0,0,0,0]
 	display = []
@@ -70,6 +72,7 @@ function reset(){
 	OUT = 7
 	PRI = 8
 	IMM = 9
+	JMP = 10
 
 	registers = [0,0,0,0,0,0,0,0]
 
@@ -134,6 +137,10 @@ function setpx( x,  y,  a, display){
 
 function interpret( x){
 
+	if(x[0] == "." || (x[0] == "/" && x[1] == "/")){
+		return -1
+	}
+
 	instruction = ram[registers[PC]]
 
 	opCode = (instruction & 0x1E00) >> 9
@@ -157,10 +164,14 @@ function interpret( x){
 			source1 = registers[op2]
 			source2 = registers[op3]
 			destination = registers[op1]
+			dontIncrement = true
+			if(destination[0] == "."){
+				destination = keys[destination]
+				dontIncrement = false
+			}
 			answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
 			if(answer){
 				registers[PC] = destination
-				dontIncrement = true
 			}
 			break
 		case NOR:
@@ -201,6 +212,15 @@ function interpret( x){
 		case IMM:
 			registers[op1] = op2
 			break
+		case JMP:
+			destination = registers[op1]
+			dontIncrement = true
+			if(destination[0] == "."){
+				destination = keys[destination]
+				dontIncrement = false
+			}
+			registers[PC] = destination
+			break
 	}
 }
 
@@ -212,7 +232,11 @@ function tick(){
 	tick++
 
 	if(tick%2 == 0){
-		regs[PC] = tick/2
+		if(dontIncrement){
+			
+		} else {
+			regs[PC]++
+		}
 		interpret(program_counter)
 	}
 }
