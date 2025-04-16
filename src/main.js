@@ -69,6 +69,7 @@ function reset(){
 	IN = 6
 	OUT = 7
 	PRI = 8
+	IMM = 9
 
 	registers = [0,0,0,0,0,0,0,0]
 
@@ -196,6 +197,10 @@ function interpret( x){
 		case PRI:
 			source1 = registers[op1]
 			api.broadcastMessage(charSet()[source1])
+			break
+		case IMM:
+			registers[op1] = op2
+			break
 	}
 }
 
