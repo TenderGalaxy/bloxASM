@@ -83,7 +83,7 @@ function reset(){
 	IMM = 8
 	JMP = 9
 	END = 10
-	SUb = 11
+	SUB = 11
 	NOP = 12
 	LSH = 13
 	INC = 14
