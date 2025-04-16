@@ -45,11 +45,11 @@ function reset(){
 "// Sets register 1 to ASCII H",
 "000800010011",
 "// prints register 1",
-"00070001",
+"000700010000",
 "// Sets register 1 to ASCII I",
 "000800010012",
 "// prints register 1",
-"00070001"
+"000700010000"
 	]
 	ram = []
 	for(let i = 0; i < 2**12; i++){
