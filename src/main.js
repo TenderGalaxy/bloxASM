@@ -261,7 +261,7 @@ function interpret( x){
 			break
 		case RSH:
 			source1 = ram[op2]
-			answer = source1 >> 1
+			answer = fix16bit(source1 >> 1)
 			ram[op1] = answer
 			if(op1 == PC){
 				increment = false
@@ -312,7 +312,7 @@ function interpret( x){
 			break
 		case LSH:
 			source1 = ram[op2]
-			answer = source1 << 1
+			answer = fix16bit(source1 << 1)
 			ram[op1] = answer
 			if(op1 == PC){
 				increment = false
