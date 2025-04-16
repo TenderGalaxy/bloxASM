@@ -211,17 +211,17 @@ function setpx( x,  y,  a, display){
 
 
 function interpret( x){
-
-	if(x[0] == "/" && x[1] == "/"){
+	if(ram[ram[PC] + 8].toString().slice(0,2) == "//"){
 		return -1
 	}
 
-	instruction = ram[ram[PC]]
+	instruction = ram[ram[PC] + 8]
 
-	opCode = (instruction & 0xFFFF000000000000) >> 48
-	op1 = (instruction & 0xFFFF00000000) >> 32
-	op2 = (instruction & 0xFFFF0000) >> 16
-	op3 = (instruction & 0xFFFF)
+	opCode = instruction.slice(2,6)
+	op1 = instruction.slice(6,10)
+	op2 = instruction.slice(10,14)
+	op3 = instruction.slice(14,18)
+
 
 	increment = true
 
