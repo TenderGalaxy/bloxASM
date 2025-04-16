@@ -80,6 +80,7 @@ function reset(){
 	LSH = 13
 	INC = 14
 	DEC = 15
+	PRR = 16
 
 	R0 = 0
 	R1 = 1
@@ -323,6 +324,10 @@ function interpret( x){
 			if(op1 == PC){
 				increment = false
 			}
+			break
+		case PRI:
+			source1 = ram[op1]
+			api.broadcastMessage(source1)
 			break
 	}
 }
