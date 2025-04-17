@@ -68,12 +68,14 @@ function reset(){
 		}
 	}
 	display = []
+	lastDisplay = []
 	let tmp = []
 	for(let i = 0; i < 30; i++){
 		tmp.push(0)
 	}
 	for(let i = 0; i < 40; i++){
 		display.push(tmp)
+		lastDisplay.push(tmp)
 	}
 
 
@@ -380,4 +382,21 @@ tick = () => {
 		}
 		interpret(ram[PC])
 	}
+	if(tick%10 == 0 && on == "YES"){
+		display()
+	}
+}
+
+function display(){
+	api.setOptimizations(false)
+	for(let i = 0; i < display.length; i++){
+		for(let x = 0; x < display[0].length; x++){
+			block = api.getBlockId(display[i][x])
+			if( block != lastDisplay[i][x]){
+				api.setBlock(100,30-i, x - 20,block)
+			}
+			lastDisplay[i][x] = block
+		}
+	}
+	api.setOptimizations(true)
 }
