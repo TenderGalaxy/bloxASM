@@ -23,6 +23,7 @@ function functions(){
     "DEC" : "000F",
     "PRR" : "0010"
   }
+  return funs
 }
 function lengthen(x){
   while(x.length < 4){
@@ -30,26 +31,26 @@ function lengthen(x){
   } return x
 }
 function compile(line){
-  line = line.split()
+  line = line.split(' ')
   while(line.length < 4){
-    line.push(0)
+    line.push('0')
   }
-  otp = "0x" + funs[line]
-  otp += lengthen(line[1].toString(16))
-  otp += lengthen(line[2].toString(16))
-  otp += lengthen(line[3].toString(16))
+  let otp = "0x" + functions()[line[0]]
+  otp += lengthen((+line[1]).toString(16))
+  otp += lengthen((+line[2]).toString(16))
+  otp += lengthen((+line[3]).toString(16))
   return otp
 }
 
-function fullcompile(){
-  otp = "["
-  for (let i = 0; i < rom.length - 1; i++){
-    otp += '"' + compile(rom[i]) + '",'
-  }
-  otp += '"' + compile[rom[rom.length-1]] + '"]"
-  return otp
-}
 
-console.log(fullcompile())
+
+otp = "["
+for (let i = 0; i < rom.length - 1; i++){
+  m = compile(rom[i])
+  otp += '"' + m + '",'
+}
+m = compile(rom[rom.length-1])
+otp += '"' + m + '"]'
+console.log(otp)
 
 
