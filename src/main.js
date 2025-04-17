@@ -368,6 +368,21 @@ function interpret( x){
 	}
 }
 
+function display(){
+	api.setOptimizations(false)
+	for(let i = 0; i < display.length; i++){
+		for(let x = 0; x < display[0].length; x++){
+			block = api.getBlockId(display[i][x])
+			if( block != lastDisplay[i][x]){
+				api.setBlock(100,30-i, x - 20,block)
+			}
+			lastDisplay[i][x] = block
+		}
+	}
+	api.setOptimizations(true)
+}
+
+
 tick = () => {
 	try{on}catch{
 		reset()
@@ -387,16 +402,3 @@ tick = () => {
 	}
 }
 
-function display(){
-	api.setOptimizations(false)
-	for(let i = 0; i < display.length; i++){
-		for(let x = 0; x < display[0].length; x++){
-			block = api.getBlockId(display[i][x])
-			if( block != lastDisplay[i][x]){
-				api.setBlock(100,30-i, x - 20,block)
-			}
-			lastDisplay[i][x] = block
-		}
-	}
-	api.setOptimizations(true)
-}
