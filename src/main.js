@@ -28,7 +28,7 @@ function onplayerSelectInventorySlot(p,i){
 		if (getblockCoordinatesplayerStandingOn(j) == []){
 			key = 0
 		}
-		api.broadcast(key)
+		api.broadcastMessage(key)
 	}
 }
 function setReg(x,y){
