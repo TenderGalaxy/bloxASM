@@ -43,14 +43,19 @@ function reset(){
 	api.setblockRect([100, 0, 10],[100, 30, 20],"White Concrete")
 	rom = [
 "// Sets register 1 to ASCII H",
-"0x000800010011",
+"0x0008000100110000",
 "// prints register 1",
-"0x000700010000",
+"0x0007000100000000",
 "// Sets register 1 to ASCII I",
-"0x000800010012",
+"0x0008000100120000",
 "// prints register 1",
-"0x000700010000"
+"0x0007000100000000",
+"// Sets register 1 to ASCII newl",
+"0x00080001003B0000",
+"// Prints register 1",
+"0x0007000100000000",
 	]
+	toPr = ""
 	ram = []
 	for(let i = 0; i < 2**12; i++){
 		ram.push(0)
@@ -139,6 +144,10 @@ function logicalNOR( x,  y){
 
 }
 
+
+
+
+
 function charSet(){
 	return ['0',
 		'1',
@@ -203,6 +212,14 @@ function charSet(){
 		' '
 	       ]
 }
+function drawChar(x){
+    if(x == "\n"){
+        api.broadcastMessage(toPr)
+        toPr = ""
+    } else {
+        toPr = toPr + x
+    }
+}
 
 function setpx( x,  y,  a, display){
 	display[x][y] = a
@@ -217,15 +234,25 @@ function interpret( x){
 
 	instruction = ram[ram[PC] + 8]
 
-	opCode = instruction.slice(2,6).toString(10)
-	op1 = parseInt(instruction.slice(6,10).toString(10))
-	op2 = parseInt(instruction.slice(10,14).toString(10))
-	op3 = parseInt(instruction.slice(14,18).toString(10))
-
+	opCode = '0x' + instruction.slice(2,6).toString(16)
+	op1 = '0x' + instruction.slice(6,10).toString(16)
+	op2 = '0x' + instruction.slice(10,14).toString(16)
+	op3 = '0x' + instruction.slice(14,18).toString(16)
+	opCode = +opCode
+	op1 = +op1
+	op2 = +op2
+	op3 = +op3
+	/*
+    console.log(opCode)
+    console.log(op1)
+    console.log(op2)
+    console.log(op3)
+    console.log("----------------")
+    */
 
 	increment = true
 	switch (opCode){
-		case "0000": // ADD
+		case ADD:
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = fix16bit(source1 + source2)
@@ -234,7 +261,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0001": // BGE
+		case BGE:
 			source1 = ram[op2]
 			source2 = ram[op3]
 			destination = ram[op1]
@@ -248,7 +275,7 @@ function interpret( x){
 				ram[PC] = destination
 			}
 			break
-		case "0002": // NOR
+		case NOR:
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = logicalNOR(source1, source2)
@@ -257,7 +284,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0003": //RSH
+		case RSH:
 			source1 = ram[op2]
 			answer = fix16bit(source1 >> 1)
 			ram[op1] = answer
@@ -265,27 +292,27 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0004": //MOV
+		case MOV:
 			ram[op1] = ram[op2]
 			break
-		case "0005": //IN
+		case IN:
 			ram[op1] = fix16bit(key)
 			key = 0
 			break
-		case "0006": //OUT
+		case OUT:
 			source1 = ram[op1]
 			source2 = ram[op2]
 			source3 = ram[op3]
 			setpx(source1,source2,source3)
 			break
-		case "0007": //PRI
+		case PRI:
 			source1 = ram[op1]
-			console.log(charSet()[source1])
+			drawChar(charSet()[source1])
 			break
-		case "0008": //IMM
+		case IMM:
 			ram[op1] = op2
 			break
-		case "0009": //JMP
+		case JMP:
 			destination = ram[op1]
 			increment = false
 			if(destination[0] == "."){
@@ -294,10 +321,10 @@ function interpret( x){
 			}
 			ram[PC] = destination
 			break
-		case "0010": //END
+		case END:
 			halt = "YES"
 			break
-		case "0011": //SUB
+		case SUB:
 			source1 = ram[op2]
 			source2 = ram[op3]
 			answer = fix16bit(source1 - source2)
@@ -306,9 +333,9 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0012": //NOP
+		case NOP:
 			break
-		case "0013": // LSH
+		case LSH:
 			source1 = ram[op2]
 			answer = fix16bit(source1 << 1)
 			ram[op1] = answer
@@ -316,7 +343,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0014": //INC
+		case INC:
 			source1 = ram[op2]
 			answer = fix16bit(source1 + 1)
 			ram[op1] = answer
@@ -324,7 +351,7 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0015" :// DEC
+		case DEC:
 			source1 = ram[op2]
 			answer = fix16bit(source1 - 1)
 			ram[op1] = answer
@@ -332,9 +359,9 @@ function interpret( x){
 				increment = false
 			}
 			break
-		case "0016" :// PRR
+		case PRR:
 			source1 = ram[op1]
-			api.broadcastMessage(source1)
+			drawChar(source1)
 			break
 	}
 }
