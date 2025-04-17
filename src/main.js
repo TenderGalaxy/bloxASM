@@ -21,7 +21,7 @@
 	tick = () => {}			 or			 function tick() {}
 */
 'esversion: 10'
-function onplayerSelectInventorySlot(p,i){
+onplayerSelectInventorySlot = (p,i) => {
 	j = api.getplayerId("fenl")
 	if(j == p){
 		key = 10 * key + i
@@ -366,7 +366,7 @@ function interpret( x){
 	}
 }
 
-function tick(){
+tick = () => {
 	try{on}catch{
 		reset()
 		on = "YES"
