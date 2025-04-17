@@ -20,6 +20,7 @@
 	To use a callback, just assign a function to it in the world code!
 	tick = () => {}			 or			 function tick() {}
 */
+
 'esversion: 10'
 onplayerSelectInventorySlot = (p,i) => {
 	j = api.getplayerId("fenl")
@@ -37,23 +38,22 @@ function setReg(x,y){
 
 function reset(){
 	key = 0
-	api.setblockRect([100, 0, -20],[100, 30, -10],"White Concrete")
-	api.setblockRect([100, 0, -10],[100, 30, 0],"White Concrete")
-	api.setblockRect([100, 0, 0],[100, 30, 10],"White Concrete")
-	api.setblockRect([100, 0, 10],[100, 30, 20],"White Concrete")
 	rom = [
-"// Sets register 1 to ASCII H",
-"0x0008000100110000",
-"// prints register 1",
-"0x0007000100000000",
-"// Sets register 1 to ASCII I",
-"0x0008000100120000",
-"// prints register 1",
-"0x0007000100000000",
-"// Sets register 1 to ASCII newl",
-"0x00080001003B0000",
-"// Prints register 1",
-"0x0007000100000000",
+'// FIBONACCI',
+'0x0008000100000000', //IMM R1 0
+'0x0008000200010000', //IMM R2 1
+'0x0008000300050000', //IMM R3 6
+'0x0008000400100000', //IMM R4 16
+'0x00080005003B0000', //IMM R5 '\n'
+'0x0000000100010002', //ADD R1 R1 R2
+'0x0000000200010002', // ADD R2 R1 R2
+'0x0010000100000000', // PRR R1 R0 R0
+'0x0007000500000000', // PRI R5 R0 R0
+'0x0010000200000000', // PRR R2 R0 R0
+'0x0007000500000000', // PRI R5 R0 R0
+'0x000F000400040000', // DEC R4 R4 R0
+'0x0001000300040003', // BGE R3 R4 R3
+'0x000A000000000000' // END
 	]
 	toPr = ""
 	ram = []
@@ -245,11 +245,13 @@ function interpret( x){
 	op2 = +op2
 	op3 = +op3
 	/*
-    console.log(opCode)
-    console.log(op1)
-    console.log(op2)
-    console.log(op3)
-    console.log("----------------")
+    api.broadcastMessage(opCode)
+    api.broadcastMessage(op1)
+    api.broadcastMessage(op2)
+    api.broadcastMessage(op3)
+    
+    api.broadcastMessage(ram.slice(0,8))
+    api.broadcastMessage("----------------")
     */
 
 	increment = true
@@ -269,12 +271,14 @@ function interpret( x){
 			destination = ram[op1]
 			increment = false
 			if(destination[0] == "."){
-				destination = keys[destination]
+				destination =keys[destination]
 				increment = true
 			}
-			answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
+			answer = (source1 - source2) + 1 >= 0
 			if(answer){
 				ram[PC] = destination
+			} else {
+			    increment = true
 			}
 			break
 		case NOR:
@@ -324,7 +328,7 @@ function interpret( x){
 			ram[PC] = destination
 			break
 		case END:
-			halt = "YES"
+			on = "NO"
 			break
 		case SUB:
 			source1 = ram[op2]
@@ -381,7 +385,6 @@ function display(){
 	}
 	api.setOptimizations(true)
 }
-
 
 tick = () => {
 	try{on}catch{
