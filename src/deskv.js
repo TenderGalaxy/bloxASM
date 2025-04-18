@@ -1,4 +1,3 @@
-
 'esversion: 10'
 onplayerSelectInventorySlot = (p,i) => {
 	j = api.getplayerId("fenl")
@@ -16,19 +15,7 @@ function setReg(x,y){
 
 function reset(){
 	key = 0
-	api.setblockRect([100, 0, -20],[100, 30, -10],"White Concrete")
-	api.setblockRect([100, 0, -10],[100, 30, 0],"White Concrete")
-	api.setblockRect([100, 0, 0],[100, 30, 10],"White Concrete")
-	api.setblockRect([100, 0, 10],[100, 30, 20],"White Concrete")
-	rom = [
-'// FIBONACCI'
-'0x0008000100000000'
-'0x0008000200010000'
-'0x0000000100010002'
-'0x0000000200010002'
-'0x0010000100000000'
-'0x0009000300000000'
-	]
+	rom = ['//Assembled with the BloxASM URCL Assembler',"0x0008000100000000","0x0008000200010000","0x00080003003b0000","0x0008000400100000","0x0008000500050000","0x0000000100020001","0x0010000100000000","0x0007000300000000","0x0000000200020001","0x0010000200000000","0x0007000300000000","0x000F000400040000","0x0001000500040005","0x000A000000000000"]
 	toPr = ""
 	ram = []
 	for(let i = 0; i < 2**12; i++){
@@ -246,9 +233,10 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			answer = (source1 + (((2**16) - 1) - source2) + 1) >= (2**16)
-			if(answer){
+			if(source1 >= source2){
 				ram[PC] = destination
+			} else {
+			    increment = true
 			}
 			break
 		case NOR:
@@ -298,7 +286,7 @@ function interpret( x){
 			ram[PC] = destination
 			break
 		case END:
-			halt = "YES"
+			on = "NO"
 			break
 		case SUB:
 			source1 = ram[op2]
@@ -360,9 +348,9 @@ on = "YES"
 reset()
 increment = true
 
-while(on == "YES"){
+while(ram[ram[PC] + 8] != "0x000A000000000000"){
 	if(increment){
 		ram[PC]++
 	}
-	interpret(ram[PC])
+	interpret(ram[PC] + 8)
 }
