@@ -245,13 +245,11 @@ function interpret( x){
 	op2 = +op2
 	op3 = +op3
 	/*
-    api.broadcastMessage(opCode)
-    api.broadcastMessage(op1)
-    api.broadcastMessage(op2)
-    api.broadcastMessage(op3)
-    
-    api.broadcastMessage(ram.slice(0,8))
-    api.broadcastMessage("----------------")
+    console.log(opCode)
+    console.log(op1)
+    console.log(op2)
+    console.log(op3)
+    console.log("----------------")
     */
 
 	increment = true
@@ -274,8 +272,7 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			answer = (source1 - source2) + 1 >= 0
-			if(answer){
+			if(source1 >= source2){
 				ram[PC] = destination
 			} else {
 			    increment = true
@@ -386,6 +383,20 @@ function display(){
 	api.setOptimizations(true)
 }
 
+function display(){
+	api.setOptimizations(false)
+	for(let i = 0; i < display.length; i++){
+		for(let x = 0; x < display[0].length; x++){
+			block = api.getBlockId(display[i][x])
+			if( block != lastDisplay[i][x]){
+				api.setBlock(100,30-i, x - 20,block)
+			}
+			lastDisplay[i][x] = block
+		}
+	}
+	api.setOptimizations(true)
+}
+
 tick = () => {
 	try{on}catch{
 		reset()
@@ -398,7 +409,7 @@ tick = () => {
 		if(increment){
 			ram[PC]++
 		}
-		interpret(ram[PC])
+		interpret(ram[PC] + 8)
 	}
 	if(tick%10 == 0 && on == "YES"){
 		display()
