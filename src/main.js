@@ -38,7 +38,7 @@ onplayerSelectInventorySlot = (p,i) => {
 		if (getblockCoordinatesplayerStandingOn(j) == []){
 			key = 0
 		}
-		console.log(key)
+		api.broadcastMessage(key)
 	}
 }
 function setReg(x,y){
@@ -227,7 +227,7 @@ function charSet(){
 }
 function drawChar(x){
     if(x == "\n"){
-        console.log(toPr)
+        api.broadcastMessage(toPr)
         toPr = ""
     } else {
         toPr = toPr + x
@@ -256,11 +256,11 @@ function interpret( x){
 	op2 = +op2
 	op3 = +op3
 	/*
-    console.log(opCode)
-    console.log(op1)
-    console.log(op2)
-    console.log(op3)
-    console.log("----------------")
+    api.broadcastMessage(opCode)
+    api.broadcastMessage(op1)
+    api.broadcastMessage(op2)
+    api.broadcastMessage(op3)
+    api.broadcastMessage("----------------")
     */
 
 	increment = true
