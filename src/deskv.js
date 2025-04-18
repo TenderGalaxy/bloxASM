@@ -1,4 +1,36 @@
 'esversion: 10'
+/* Support needed for:
+Stack
+Register Flag SP
+PSH
+POP
+CAL
+RET
+BRC
+BNC
+MULT
+DIV
+MOD
+BSR
+BSL
+SRS
+BSS
+SETE
+SETNE
+SETGE
+SETLE
+SETC
+SETNC
+LLOD
+LSTR
+SDIV
+SBRL
+SBRG
+SBLE
+SSETL
+SSETG
+ABS
+*/
 onplayerSelectInventorySlot = (p,i) => {
 	j = api.getplayerId("fenl")
 	if(j == p){
@@ -251,7 +283,7 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			if((source1 + (((2**16) - 1) - source2) + 1) >= (2**16)){
+			if(source1 >= source2){
 				ram[PC] = destination
 			} else {
 			    increment = true
@@ -373,7 +405,151 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			if((source1 + (((2**16) - 1) - source2) + 1) < (2**16)){
+			if(source1 < source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 24: //BRG
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 > source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 25: // BRE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 == source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 26: // BNE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 != source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 27: //BOD
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 % 2 == 1){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 28: //BEV
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 % 2 == 0){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 29: //BLE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 <= source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 30: //BRZ
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 == 0){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 31:  //BNZ
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 != 0) < (2**16)){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 32: //BRN
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1.toString(2)[0] == 1 ){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 33: //BRP
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1.toString(2)[0] == 0){
 				ram[PC] = destination
 			} else {
 			    increment = true
