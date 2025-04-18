@@ -82,18 +82,16 @@ function fix16bit( x){
 	return x
 }
 function logicalNOR( x,  y){
-	x = x.toString(2).slice(2)
+	x = x.toString(2)
 	while(len(x) < 16){
 		x = "0" + x
 	}
-	y = y.toString(2).slice(2)
+	y = y.toString(2)
 	while(len(y) < 16){
 		y = '0' + y
 	}
 
 	 answer = ''
-	 a
-	 b
 
 	for(let i = 0; i < 16; i++){
 		a = x[i]
@@ -103,10 +101,30 @@ function logicalNOR( x,  y){
 		} else {
 			answer += '0'
 		}
-	}
+	} return answer
 
 }
 
+function bXNOR(x,y){
+	x = x.toString(2)
+	while(len(x) < 16){
+		x = "0" + x
+	}
+	y = y.toString(2)
+	while(len(y) < 16){
+		y = '0' + y
+	}
+	answer = ' '
+	for(let i = 0; i < 16; i++){
+		a = x[i]
+		b = y[i]
+		if(a == b){
+			answer += '1'
+		} else {
+			answer += '0'
+		}
+	} return answer
+}
 
 
 
@@ -233,7 +251,7 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			if(source1 >= source2){
+			if((source1 + (((2**16) - 1) - source2) + 1) >= (2**16)){
 				ram[PC] = destination
 			} else {
 			    increment = true
@@ -326,6 +344,40 @@ function interpret( x){
 		case PRR:
 			source1 = ram[op1]
 			drawChar(source1)
+			break
+		case 17: //NEG
+			source1 = ~ram[op2]
+			ram[op1] = source1
+			break
+		case 18: //AND
+			ram[op1] = ram[op2] & ram[op3]
+			break
+		case 19: //OR
+			ram[op1] = ram[op2] || ram[op3]
+			break
+		case 20: //XNOR
+			ram[op1] = bXNOR(ram[op2], ram[op3])
+			break
+		case 21: //XOR
+			ram[op1] = ram[op2]^ram[op3]
+			break
+		case 22: //NAND
+			ram[op1] = ~(ram[op2] & ram[op3])
+			break
+		case 23: //BRL
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if((source1 + (((2**16) - 1) - source2) + 1) < (2**16)){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
 			break
 	}
 }
