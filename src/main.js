@@ -521,7 +521,7 @@ function interpret( x){
 				destination =keys[destination]
 				increment = true
 			}
-			if(source1 != 0) < (2**16)){
+			if(source1 != 0){
 				ram[PC] = destination
 			} else {
 			    increment = true
