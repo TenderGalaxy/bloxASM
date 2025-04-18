@@ -1,27 +1,36 @@
-/*
-	tick onClose onplayerJoin onplayerLeave onplayerJump onRespawnRequest
-	playerCommand onplayerChat onplayerChangeblock onplayerDropItem
-	onplayerpickedUpItem onplayerSelectInventorySlot onblockStand
-	onplayerAttemptCraft onplayerCraft onplayerAttemptOpenChest
-	onplayerOpenedChest onplayerMoveItemOutOfInventory onplayerMoveInvenItem
-	onplayerMoveItemoIdxs onplayerSwapInvenSlots onplayerMoveInvenItemWithAmt
-	onplayerAttemptAltAction onplayerAltAction onplayerClick
-	onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeblock
-	onCreatebloxdMeshEntity onEntityCollision onplayerAttemptSpawnMob
-	onWorldAttemptSpawnMob onplayerSpawnMob onWorldSpawnMob onMobDespawned
-	onplayerAttack onplayerDamagingOtherplayer onplayerDamagingMob
-	onMobDamagingplayer onMobDamagingOtherMob onplayerKilledOtherplayer
-	onMobKilledplayer onplayerKilledMob onMobKilledOtherMob onplayerpotionEffect
-	onplayerDamagingMeshEntity onplayerbreakMeshEntity onplayerUsedThrowable
-	onplayerThrowableHitTerrain onTouchscreenActionbutton onTaskClaimed
-	onChunkLoaded onplayerRequestChunk onItemDropCreated
-	onplayerStartChargingItem onplayerFinishChargingItem doperiodicSave
-
-	To use a callback, just assign a function to it in the world code!
-	tick = () => {}			 or			 function tick() {}
-*/
-
 'esversion: 10'
+/* Support needed for:
+Stack
+Register Flag SP
+PSH
+POP
+CAL
+RET
+BRC
+BNC
+MULT
+DIV
+MOD
+BSR
+BSL
+SRS
+BSS
+SETE
+SETNE
+SETGE
+SETLE
+SETC
+SETNC
+LLOD
+LSTR
+SDIV
+SBRL
+SBRG
+SBLE
+SSETL
+SSETG
+ABS
+*/
 onplayerSelectInventorySlot = (p,i) => {
 	j = api.getplayerId("fenl")
 	if(j == p){
@@ -29,7 +38,7 @@ onplayerSelectInventorySlot = (p,i) => {
 		if (getblockCoordinatesplayerStandingOn(j) == []){
 			key = 0
 		}
-		api.broadcastMessage(key)
+		console.log(key)
 	}
 }
 function setReg(x,y){
@@ -38,23 +47,7 @@ function setReg(x,y){
 
 function reset(){
 	key = 0
-	rom = [
-'// FIBONACCI',
-'0x0008000100000000', //IMM R1 0
-'0x0008000200010000', //IMM R2 1
-'0x0008000300050000', //IMM R3 6
-'0x0008000400100000', //IMM R4 16
-'0x00080005003B0000', //IMM R5 '\n'
-'0x0000000100010002', //ADD R1 R1 R2
-'0x0000000200010002', // ADD R2 R1 R2
-'0x0010000100000000', // PRR R1 R0 R0
-'0x0007000500000000', // PRI R5 R0 R0
-'0x0010000200000000', // PRR R2 R0 R0
-'0x0007000500000000', // PRI R5 R0 R0
-'0x000F000400040000', // DEC R4 R4 R0
-'0x0001000300040003', // BGE R3 R4 R3
-'0x000A000000000000' // END
-	]
+	rom = ['//Assembled with the BloxASM URCL Assembler',"0x0008000100000000","0x0008000200010000","0x00080003003b0000","0x0008000400100000","0x0008000500050000","0x0000000100020001","0x0010000100000000","0x0007000300000000","0x0000000200020001","0x0010000200000000","0x0007000300000000","0x000F000400040000","0x0001000500040005","0x000A000000000000"]
 	toPr = ""
 	ram = []
 	for(let i = 0; i < 2**12; i++){
@@ -121,18 +114,16 @@ function fix16bit( x){
 	return x
 }
 function logicalNOR( x,  y){
-	x = x.toString(2).slice(2)
+	x = x.toString(2)
 	while(len(x) < 16){
 		x = "0" + x
 	}
-	y = y.toString(2).slice(2)
+	y = y.toString(2)
 	while(len(y) < 16){
 		y = '0' + y
 	}
 
 	 answer = ''
-	 a
-	 b
 
 	for(let i = 0; i < 16; i++){
 		a = x[i]
@@ -142,10 +133,30 @@ function logicalNOR( x,  y){
 		} else {
 			answer += '0'
 		}
-	}
+	} return answer
 
 }
 
+function bXNOR(x,y){
+	x = x.toString(2)
+	while(len(x) < 16){
+		x = "0" + x
+	}
+	y = y.toString(2)
+	while(len(y) < 16){
+		y = '0' + y
+	}
+	answer = ' '
+	for(let i = 0; i < 16; i++){
+		a = x[i]
+		b = y[i]
+		if(a == b){
+			answer += '1'
+		} else {
+			answer += '0'
+		}
+	} return answer
+}
 
 
 
@@ -216,7 +227,7 @@ function charSet(){
 }
 function drawChar(x){
     if(x == "\n"){
-        api.broadcastMessage(toPr)
+        console.log(toPr)
         toPr = ""
     } else {
         toPr = toPr + x
@@ -366,6 +377,184 @@ function interpret( x){
 			source1 = ram[op1]
 			drawChar(source1)
 			break
+		case 17: //NEG
+			source1 = ~ram[op2]
+			ram[op1] = source1
+			break
+		case 18: //AND
+			ram[op1] = ram[op2] & ram[op3]
+			break
+		case 19: //OR
+			ram[op1] = ram[op2] || ram[op3]
+			break
+		case 20: //XNOR
+			ram[op1] = bXNOR(ram[op2], ram[op3])
+			break
+		case 21: //XOR
+			ram[op1] = ram[op2]^ram[op3]
+			break
+		case 22: //NAND
+			ram[op1] = ~(ram[op2] & ram[op3])
+			break
+		case 23: //BRL
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 < source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 24: //BRG
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 > source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 25: // BRE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 == source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 26: // BNE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 != source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 27: //BOD
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 % 2 == 1){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 28: //BEV
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 % 2 == 0){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 29: //BLE
+			source1 = ram[op2]
+			source2 = ram[op3]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 <= source2){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 30: //BRZ
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 == 0){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 31:  //BNZ
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1 != 0) < (2**16)){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 32: //BRN
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1.toString(2)[0] == 1 ){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
+		case 33: //BRP
+			source1 = ram[op2]
+			destination = ram[op1]
+			increment = false
+			if(destination[0] == "."){
+				destination =keys[destination]
+				increment = true
+			}
+			if(source1.toString(2)[0] == 0){
+				ram[PC] = destination
+			} else {
+			    increment = true
+			}
+			break
 	}
 }
 
@@ -383,36 +572,18 @@ function display(){
 	api.setOptimizations(true)
 }
 
-function display(){
-	api.setOptimizations(false)
-	for(let i = 0; i < display.length; i++){
-		for(let x = 0; x < display[0].length; x++){
-			block = api.getBlockId(display[i][x])
-			if( block != lastDisplay[i][x]){
-				api.setBlock(100,30-i, x - 20,block)
-			}
-			lastDisplay[i][x] = block
-		}
-	}
-	api.setOptimizations(true)
-}
 
-tick = () => {
+
+function tick(){
 	try{on}catch{
-		reset()
 		on = "YES"
+		reset()
 		increment = true
 	}
-	tick++
-
-	if(tick%2 == 0 && on == "YES"){
+	if(on == "YES"){
 		if(increment){
 			ram[PC]++
 		}
 		interpret(ram[PC] + 8)
 	}
-	if(tick%10 == 0 && on == "YES"){
-		display()
-	}
 }
-
